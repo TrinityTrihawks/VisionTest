@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team4215.robot;
 
+import edu.wpi.cscore.AxisCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -26,6 +28,11 @@ public class Robot extends TimedRobot {
 	public static final ExampleSubsystem kExampleSubsystem
 			= new ExampleSubsystem();
 	public static OI m_oi;
+	
+	final int IMG_WIDTH = 320;
+	final int IMG_HEIGHT = 240;
+	
+	AxisCamera cameraFront;
 
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -40,6 +47,11 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
+		
+		cameraFront = CameraServer.getInstance().addAxisCamera("Front", "10.42.15.39");
+		cameraFront.setResolution(IMG_WIDTH, IMG_HEIGHT);
+
+		
 	}
 
 	/**
