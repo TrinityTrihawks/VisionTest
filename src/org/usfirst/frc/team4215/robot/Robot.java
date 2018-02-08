@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team4215.robot.commands.ExampleCommand;
+import org.usfirst.frc.team4215.robot.commands.ProcessPipelineData;
 import org.usfirst.frc.team4215.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -29,11 +30,8 @@ public class Robot extends TimedRobot {
 			= new ExampleSubsystem();
 	public static OI m_oi;
 	
-	final int IMG_WIDTH = 320;
-	final int IMG_HEIGHT = 240;
+	public static final ProcessPipelineData processPipelineData = new ProcessPipelineData();
 	
-	AxisCamera cameraFront;
-
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -48,9 +46,7 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		
-		cameraFront = CameraServer.getInstance().addAxisCamera("Front", "10.42.15.39");
-		cameraFront.setResolution(IMG_WIDTH, IMG_HEIGHT);
-
+		processPipelineData.start();	
 		
 	}
 
