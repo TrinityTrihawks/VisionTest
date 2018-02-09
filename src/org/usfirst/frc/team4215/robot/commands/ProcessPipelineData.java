@@ -8,31 +8,24 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team4215.robot.Pipeline;
+import org.usfirst.frc.team4215.robot.Robot;
 
 public class ProcessPipelineData extends Command {
-	//private static final int IMG_WIDTH = 320;
-	//private static final int IMG_HEIGHT = 240;
-	// Sets Camera Image Resolution
+
 	
 	private double centerX = 0.0;			//Creates the variable centerX. 
 	
 	AxisCamera camera;
 	Pipeline pipeline;
 	public ProcessPipelineData() {
-		this.camera = camera;
+		requires(Robot.camera);
 	}
 
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
 		System.out.println("Initializing ProcessPipelineData command");
-		
-		/*
-		CameraServer server = CameraServer.getInstance();
-		camera = server.addAxisCamera("10.42.15.37");
-		camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-		server.startAutomaticCapture();	//Begins getting video from the camera
-		*/
+	
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -41,7 +34,7 @@ public class ProcessPipelineData extends Command {
 		
 		System.out.println("Running ProcessPipelineData command");
 	
-	/*
+	
       if (!pipeline.filterContoursOutput().isEmpty()) {
             Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
              
@@ -53,7 +46,7 @@ public class ProcessPipelineData extends Command {
       else {
     	  System.out.println("No Contours");
       }
-      */
+      
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

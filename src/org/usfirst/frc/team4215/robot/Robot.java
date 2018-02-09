@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team4215.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4215.robot.commands.ProcessPipelineData;
+import org.usfirst.frc.team4215.robot.subsystems.Camera;
 import org.usfirst.frc.team4215.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -28,9 +29,10 @@ import org.usfirst.frc.team4215.robot.subsystems.ExampleSubsystem;
 public class Robot extends TimedRobot {
 	public static final ExampleSubsystem kExampleSubsystem
 			= new ExampleSubsystem();
+	public static final Camera camera = new Camera();
 	public static OI m_oi;
 	
-	AxisCamera camera;
+	AxisCamera axisCamera;
 
 	
 	public static final ProcessPipelineData processPipelineData = new ProcessPipelineData();
@@ -55,8 +57,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Auto mode", m_chooser);
 		
 		CameraServer server = CameraServer.getInstance();
-		camera = server.addAxisCamera("10.42.15.39");
-		camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+		axisCamera = server.addAxisCamera("10.42.15.39");
+		axisCamera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 		server.startAutomaticCapture();	//Begins getting video from the camera
 		
 		
@@ -134,6 +136,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		System.out.println("Got here");
 		Scheduler.getInstance().run();
 	}
 
