@@ -1,7 +1,6 @@
 package org.usfirst.frc.team4215.robot.commands;
 
 
-import edu.wpi.cscore.AxisCamera;
 import edu.wpi.cscore.CvSink;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -35,25 +34,27 @@ public class ProcessPipelineData extends Command {
 		System.out.println("Initializing ProcessPipelineData command");
 		
 		visionThread = new VisionThread(Robot.camera.getCamera(), new Pipeline(), pipeline -> {
-	    	
-		CvSink cvSink = CameraServer.getInstance().getVideo();
-		Mat source0 = new Mat();
-		Mat output = new Mat();
-		
-		System.out.println("Running vision thread");
-		
 			
-	    if (!pipeline.filterContoursOutput().isEmpty()) {
-	    	Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-	        synchronized (imgLock) {
-                centerX = r.x + (r.width / 2);	                	                
-                System.out.println("Current Center X variable:" + centerX);
-	        }
-	    }
-	    else {
-	    	System.out.println("No Contours");
-	    }
-	    });
+			System.out.println("Running vision thread");
+
+	    	
+			CvSink cvSink = CameraServer.getInstance().getVideo();
+			Mat source0 = new Mat();
+			Mat output = new Mat();
+			
+			
+				
+		    if (!pipeline.filterContoursOutput().isEmpty()) {
+		    	Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+		        synchronized (imgLock) {
+	                centerX = r.x + (r.width / 2);	                	                
+	                System.out.println("Current Center X variable: " + centerX);
+		        }
+		    }
+		    else {
+		    	System.out.println("No Contours");
+		    }
+		});
 		visionThread.setDaemon(true);
 	
 	}
@@ -61,6 +62,7 @@ public class ProcessPipelineData extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
+		System.out.println("Executing ProcessPipelineData command");
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
