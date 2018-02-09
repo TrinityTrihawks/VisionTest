@@ -24,6 +24,10 @@ public class Camera extends Subsystem {
 		camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 		server.startAutomaticCapture();	//Begins getting video from the camera	
 	}
+	
+	public AxisCamera getCamera() {
+		return camera;
+	}
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.

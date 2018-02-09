@@ -2,9 +2,12 @@ package org.usfirst.frc.team4215.robot.commands;
 
 
 import edu.wpi.cscore.AxisCamera;
+import edu.wpi.cscore.CvSink;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.vision.VisionThread;
 
+import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team4215.robot.Pipeline;
@@ -14,9 +17,12 @@ public class ProcessPipelineData extends Command {
 
 	
 	private double centerX = 0.0;			//Creates the variable centerX. 
+	private VisionThread visionThread;			//Creates Vision Thread for future use
 	
-	AxisCamera camera;
-	Pipeline pipeline;
+	private final Object imgLock = new Object();
+	public Object visionStop;
+
+
 	public ProcessPipelineData() {
 		requires(Robot.camera);
 	}
@@ -25,28 +31,32 @@ public class ProcessPipelineData extends Command {
 	@Override
 	protected void initialize() {
 		System.out.println("Initializing ProcessPipelineData command");
+		
+		visionThread = new VisionThread(Robot.camera.getCamera(), new Pipeline(), pipeline -> {
+	    	
+		CvSink cvSink = CameraServer.getInstance().getVideo();
+		Mat source0 = new Mat();
+		Mat output = new Mat();
+		
+			
+	    if (!pipeline.filterContoursOutput().isEmpty()) {
+	    	Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+	        synchronized (imgLock) {
+                centerX = r.x + (r.width / 2);	                	                
+                System.out.println("Current Center X variable:" + centerX);
+	        }
+	    }
+	    else {
+	    	System.out.println("No Contours");
+	    }
+	    });
+		visionThread.setDaemon(true);
 	
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		
-		System.out.println("Running ProcessPipelineData command");
-	
-	
-      if (!pipeline.filterContoursOutput().isEmpty()) {
-            Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-             
-            centerX = r.x + (r.width / 2);	                	                
-            System.out.println(centerX); 	//if the code is actually working,
-            System.out.println("Current Center X variable");          //a number should be displayed
-            
-        }
-      else {
-    	  System.out.println("No Contours");
-      }
-      
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

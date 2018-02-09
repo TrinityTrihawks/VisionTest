@@ -7,8 +7,6 @@
 
 package org.usfirst.frc.team4215.robot;
 
-import edu.wpi.cscore.AxisCamera;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -32,17 +30,11 @@ public class Robot extends TimedRobot {
 	public static final Camera camera = new Camera();
 	public static OI m_oi;
 	
-	AxisCamera axisCamera;
-
 	
 	public static final ProcessPipelineData processPipelineData = new ProcessPipelineData();
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
-
-	
-	private static final int IMG_WIDTH = 320;
-	private static final int IMG_HEIGHT = 240;
 
 	
 	/**
@@ -56,11 +48,7 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		
-		CameraServer server = CameraServer.getInstance();
-		axisCamera = server.addAxisCamera("10.42.15.39");
-		axisCamera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-		server.startAutomaticCapture();	//Begins getting video from the camera
-		
+		processPipelineData.start();
 		
 		System.out.println("Got through robotInit");
 		
@@ -127,8 +115,6 @@ public class Robot extends TimedRobot {
 			m_autonomousCommand.cancel();
 		}
 		
-		processPipelineData.start();
-
 	}
 
 	/**
@@ -136,7 +122,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		System.out.println("Got here");
 		Scheduler.getInstance().run();
 	}
 
