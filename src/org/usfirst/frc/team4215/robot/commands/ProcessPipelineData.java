@@ -24,6 +24,8 @@ public class ProcessPipelineData extends Command {
 
 
 	public ProcessPipelineData() {
+		System.out.println("Constructor of ProcessPipelineData");
+
 		requires(Robot.camera);
 	}
 

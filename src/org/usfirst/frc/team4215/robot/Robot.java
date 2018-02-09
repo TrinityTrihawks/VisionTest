@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		
-		processPipelineData.start();
+		//processPipelineData.start();
 		
 		System.out.println("Got through robotInit");
 		
