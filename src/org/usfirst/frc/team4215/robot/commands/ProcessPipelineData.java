@@ -38,6 +38,8 @@ public class ProcessPipelineData extends Command {
 		Mat source0 = new Mat();
 		Mat output = new Mat();
 		
+		System.out.println("Running vision thread");
+		
 			
 	    if (!pipeline.filterContoursOutput().isEmpty()) {
 	    	Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
