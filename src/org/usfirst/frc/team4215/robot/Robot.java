@@ -30,11 +30,19 @@ public class Robot extends TimedRobot {
 			= new ExampleSubsystem();
 	public static OI m_oi;
 	
+	AxisCamera camera;
+
+	
 	public static final ProcessPipelineData processPipelineData = new ProcessPipelineData();
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+	
+	private static final int IMG_WIDTH = 320;
+	private static final int IMG_HEIGHT = 240;
+
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -46,7 +54,13 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		
-		processPipelineData.start();	
+		CameraServer server = CameraServer.getInstance();
+		camera = server.addAxisCamera("10.42.15.39");
+		camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+		server.startAutomaticCapture();	//Begins getting video from the camera
+		
+		
+		System.out.println("Got through robotInit");
 		
 	}
 
@@ -110,6 +124,9 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+		
+		processPipelineData.start();
+
 	}
 
 	/**
