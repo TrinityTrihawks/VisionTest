@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team4215.robot;
 
+import edu.wpi.cscore.AxisCamera;
 import edu.wpi.cscore.CvSink;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -33,18 +34,29 @@ import org.usfirst.frc.team4215.robot.subsystems.ExampleSubsystem;
  */
 public class Robot extends TimedRobot {
 	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
-	public static final ProcessPipelineData processPipelineData = new ProcessPipelineData();
+	//public static final ProcessPipelineData processPipelineData = new ProcessPipelineData();
 
-	public static final Camera camera = new Camera();
+	//public static final Camera camera = new Camera();
 	
 	public static OI m_oi;
-	
+
+	/*
 	private double centerX = 0.0;			//Creates the variable centerX. 
 	private VisionThread visionThread;			//Creates Vision Thread for future use
 	
 	private final Object imgLock = new Object();
 	public Object visionStop;
+	*/
+	
+	final int IMG_WIDTH = 320;
+	final int IMG_HEIGHT = 240;
+	
+	
+	CameraPID visionPID;
+	VisionThread visionThread;
+	AxisCamera cameraFront;
 
+	
 	
 	
 	
@@ -63,8 +75,21 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		
+		cameraFront = CameraServer.getInstance().addAxisCamera("Front", "10.42.15.39");
+		cameraFront.setResolution(IMG_WIDTH, IMG_HEIGHT);
+		
+		visionPID = new CameraPID();
+	    visionThread = new VisionThread(cameraFront, new Pipeline(), visionPID);
+	    System.out.println("VisonThread initialized properly");
+	     
+	    visionThread.setDaemon(false);
+	    System.out.println("Daemon set properly");
+	     
+		visionThread.start();
+		System.out.println("VisonThread started without a hitch");
 		
 		
+		/*
 		visionThread = new VisionThread(Robot.camera.getCamera(), new Pipeline(), pipeline -> {
 			
 			System.out.println("Running vision thread");
@@ -93,7 +118,7 @@ public class Robot extends TimedRobot {
 	
 		visionThread.start();
 		System.out.println("Started vision thread");
-		
+		*/
 		
 		
 				
