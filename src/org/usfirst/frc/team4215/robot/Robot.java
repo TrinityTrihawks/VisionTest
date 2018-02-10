@@ -7,11 +7,18 @@
 
 package org.usfirst.frc.team4215.robot;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.VisionThread;
+
+import org.opencv.core.Mat;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team4215.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4215.robot.commands.ProcessPipelineData;
 import org.usfirst.frc.team4215.robot.subsystems.Camera;
@@ -25,13 +32,21 @@ import org.usfirst.frc.team4215.robot.subsystems.ExampleSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-	public static final ExampleSubsystem kExampleSubsystem
-			= new ExampleSubsystem();
+	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
+	public static final ProcessPipelineData processPipelineData = new ProcessPipelineData();
+
 	public static final Camera camera = new Camera();
+	
 	public static OI m_oi;
 	
+	private double centerX = 0.0;			//Creates the variable centerX. 
+	private VisionThread visionThread;			//Creates Vision Thread for future use
 	
-	public static final ProcessPipelineData processPipelineData = new ProcessPipelineData();
+	private final Object imgLock = new Object();
+	public Object visionStop;
+
+	
+	
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -47,6 +62,40 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
+		
+		
+		
+		visionThread = new VisionThread(Robot.camera.getCamera(), new Pipeline(), pipeline -> {
+			
+			System.out.println("Running vision thread");
+
+	    	
+			CvSink cvSink = CameraServer.getInstance().getVideo();
+			Mat source0 = new Mat();
+			Mat output = new Mat();
+			
+			
+				
+		    if (!pipeline.filterContoursOutput().isEmpty()) {
+		    	Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+		        synchronized (imgLock) {
+	                centerX = r.x + (r.width / 2);	                	                
+	                System.out.println("Current Center X variable: " + centerX);
+		        }
+		    }
+		    else {
+		    	System.out.println("No Contours");
+		    }
+		});
+		System.out.println("Initialized vision thread");
+		
+		visionThread.setDaemon(true);
+	
+		visionThread.start();
+		System.out.println("Started vision thread");
+		
+		
+		
 				
 		System.out.println("Got through robotInit");
 		
