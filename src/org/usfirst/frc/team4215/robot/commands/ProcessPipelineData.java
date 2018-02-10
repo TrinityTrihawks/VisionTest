@@ -56,6 +56,7 @@ public class ProcessPipelineData extends Command {
 		    }
 		});
 		visionThread.setDaemon(true);
+		visionThread.start();
 	
 	}
 
