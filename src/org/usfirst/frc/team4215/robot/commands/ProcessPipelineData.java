@@ -23,14 +23,17 @@ public class ProcessPipelineData extends Command {
 
 
 	public ProcessPipelineData() {
+		/*
 		System.out.println("Constructor of ProcessPipelineData");
 
 		requires(Robot.camera);
+		*/
 	}
 
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
+		/*
 		System.out.println("Initializing ProcessPipelineData command");
 		
 		visionThread = new VisionThread(Robot.camera.getCamera(), new Pipeline(), pipeline -> {
@@ -57,6 +60,7 @@ public class ProcessPipelineData extends Command {
 		});
 		visionThread.setDaemon(true);
 		visionThread.start();
+		*/
 	
 	}
 
